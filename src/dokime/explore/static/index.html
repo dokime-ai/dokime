@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dokime Explorer</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+<style>
+/* ---- Reset & Base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117;
+  --bg-card: #181a20;
+  --bg-hover: #23262f;
+  --border: #2a2d37;
+  --text: #e1e4ea;
+  --text-dim: #8b8fa3;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --accent-glow: rgba(108,92,231,0.15);
+  --green: #00d2a0;
+  --red: #ff6b6b;
+  --orange: #fdcb6e;
+  --radius: 10px;
+  --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; }
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- Layout ---- */
+.app { display: flex; flex-direction: column; height: 100vh; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--bg-card); flex-shrink: 0; }
+.header-left { display: flex; align-items: center; gap: 16px; }
+.logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.logo span { color: var(--accent-light); }
+.path-badge { background: var(--accent-glow); color: var(--accent-light); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-family: var(--mono); max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+/* ---- Tabs ---- */
+.tabs { display: flex; gap: 2px; padding: 0 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.tab { padding: 10px 20px; cursor: pointer; color: var(--text-dim); font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent-light); border-bottom-color: var(--accent-light); }
+
+/* ---- Main content ---- */
+.content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.panel { display: none; flex: 1; overflow: auto; padding: 20px 24px; }
+.panel.active { display: flex; flex-direction: column; }
+
+/* ---- Stats ---- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.stat-card .label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.stat-card .value { font-size: 28px; font-weight: 700; }
+.stat-card .value.accent { color: var(--accent-light); }
+.stat-card .value.green { color: var(--green); }
+.stat-card .value.orange { color: var(--orange); }
+.chart-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+.chart-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+
+/* ---- Data table ---- */
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-shrink: 0; gap: 12px; }
+.search-box { display: flex; gap: 8px; flex: 1; max-width: 600px; }
+.search-box input { flex: 1; padding: 8px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13px; outline: none; transition: border-color 0.15s; }
+.search-box input:focus { border-color: var(--accent); }
+.search-box input::placeholder { color: var(--text-dim); }
+.btn { padding: 8px 18px; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-light); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--bg-hover); }
+.pagination { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
+.pagination button { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.pagination button:hover { background: var(--bg-hover); }
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.data-table-wrap { flex: 1; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { position: sticky; top: 0; z-index: 2; }
+thead th { background: var(--bg-card); padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 1px solid var(--border); color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+tbody tr { cursor: pointer; transition: background 0.1s; }
+tbody tr:hover { background: var(--bg-hover); }
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); max-width: 600px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td.idx-col { width: 60px; color: var(--text-dim); font-family: var(--mono); font-size: 12px; }
+td.text-col { font-size: 13px; }
+td.meta-col { color: var(--text-dim); font-size: 12px; font-family: var(--mono); }
+
+/* ---- Document detail modal ---- */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); width: 90%; max-width: 800px; max-height: 80vh; display: flex; flex-direction: column; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.modal-header h3 { font-size: 16px; }
+.modal-close { background: none; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; line-height: 1; }
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 20px; overflow: auto; flex: 1; }
+.doc-field { margin-bottom: 16px; }
+.doc-field .field-name { font-size: 11px; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600; }
+.doc-field .field-value { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-size: 13px; white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow: auto; line-height: 1.6; }
+
+/* ---- UMAP ---- */
+.umap-panel { display: flex; flex-direction: column; height: 100%; }
+.umap-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-shrink: 0; }
+.umap-chart { flex: 1; min-height: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+.umap-status { font-size: 13px; color: var(--text-dim); }
+
+/* ---- Search results ---- */
+.search-results { flex: 1; overflow: auto; }
+.search-result { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
+.search-result:hover { border-color: var(--accent); background: var(--bg-hover); }
+.search-result .sr-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.search-result .sr-idx { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+.search-result .sr-score { font-family: var(--mono); font-size: 12px; color: var(--green); font-weight: 600; }
+.search-result .sr-text { font-size: 13px; line-height: 1.5; color: var(--text); }
+.search-result .sr-meta { margin-top: 8px; font-size: 11px; color: var(--text-dim); }
+
+/* ---- Embed panel ---- */
+.embed-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; max-width: 500px; }
+.embed-section h3 { margin-bottom: 12px; }
+.embed-section p { color: var(--text-dim); font-size: 13px; margin-bottom: 16px; line-height: 1.6; }
+.embed-progress { margin-top: 16px; font-size: 13px; color: var(--text-dim); }
+
+/* ---- Loading spinner ---- */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent-light); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Utilities ---- */
+.flex-1 { flex: 1; }
+.text-center { text-align: center; }
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+.empty-state p { font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo"><span>Dokime</span> Explorer</div>
+      <div class="path-badge" id="pathBadge">loading...</div>
+    </div>
+    <div class="header-right">
+      <span id="docCount" style="font-size:13px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="browse" onclick="switchTab('browse')">Browse</div>
+    <div class="tab" data-tab="search" onclick="switchTab('search')">Search</div>
+    <div class="tab" data-tab="stats" onclick="switchTab('stats')">Statistics</div>
+    <div class="tab" data-tab="umap" onclick="switchTab('umap')">Embeddings</div>
+  </div>
+
+  <!-- Content panels -->
+  <div class="content">
+
+    <!-- ======== BROWSE ======== -->
+    <div class="panel active" id="panel-browse">
+      <div class="table-toolbar">
+        <div class="pagination">
+          <button id="prevPage" onclick="changePage(-1)">&larr; Prev</button>
+          <span id="pageInfo">Page 1</span>
+          <button id="nextPage" onclick="changePage(1)">Next &rarr;</button>
+        </div>
+      </div>
+      <div class="data-table-wrap">
+        <table>
+          <thead>
+            <tr id="tableHead"></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======== SEARCH ======== -->
+    <div class="panel" id="panel-search">
+      <div class="table-toolbar">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Semantic search... (requires embeddings)" onkeydown="if(event.key==='Enter')doSearch()">
+          <button class="btn btn-primary" onclick="doSearch()" id="searchBtn">Search</button>
+        </div>
+      </div>
+      <div class="search-results" id="searchResults">
+        <div class="empty-state">
+          <div class="icon">&#128269;</div>
+          <p>Enter a query to search through your dataset</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== STATS ======== -->
+    <div class="panel" id="panel-stats">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="chart-container">
+        <div class="chart-title">Document Length Distribution</div>
+        <div id="lengthChart" style="height:300px;"></div>
+      </div>
+    </div>
+
+    <!-- ======== EMBEDDINGS / UMAP ======== -->
+    <div class="panel" id="panel-umap">
+      <div class="umap-panel">
+        <div class="umap-toolbar">
+          <button class="btn btn-primary" id="computeEmbBtn" onclick="computeEmbeddings()">Compute Embeddings</button>
+          <button class="btn btn-secondary" id="loadUmapBtn" onclick="loadUmap()" disabled>Load UMAP Plot</button>
+          <span class="umap-status" id="umapStatus"></span>
+        </div>
+        <div class="umap-chart" id="umapChart">
+          <div class="empty-state">
+            <div class="icon">&#10024;</div>
+            <p>Compute embeddings first, then load the UMAP visualization</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Document detail modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Document</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ---- State ----
+let currentPage = 1;
+let totalPages = 1;
+let statsData = null;
+let hasEmbeddings = false;
+
+// ---- Tab switching ----
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
+  if (tab === 'stats' && !statsData) loadStats();
+}
+
+// ---- Load data page ----
+async function loadPage(page) {
+  currentPage = page;
+  try {
+    const resp = await fetch(`/api/data?page=${page}&page_size=50`);
+    const data = await resp.json();
+    totalPages = data.total_pages;
+
+    // Build header
+    const head = document.getElementById('tableHead');
+    const fields = data.rows.length > 0 ? Object.keys(data.rows[0].fields) : ['text'];
+    head.innerHTML = '<th class="idx-col">#</th>' + fields.map(f => `<th>${escHtml(f)}</th>`).join('');
+
+    // Build body
+    const body = document.getElementById('tableBody');
+    body.innerHTML = data.rows.map(row => {
+      const cells = fields.map(f => {
+        const val = row.fields[f] || '';
+        const cls = f === 'text' ? 'text-col' : 'meta-col';
+        return `<td class="${cls}" title="${escAttr(val)}">${escHtml(val)}</td>`;
+      }).join('');
+      return `<tr onclick="showDocument(${row.idx})">\n<td class="idx-col">${row.idx}</td>${cells}</tr>`;
+    }).join('');
+
+    // Pagination
+    document.getElementById('pageInfo').textContent = `Page ${page} of ${totalPages}`;
+    document.getElementById('prevPage').disabled = page <= 1;
+    document.getElementById('nextPage').disabled = page >= totalPages;
+  } catch (e) {
+    console.error('Failed to load page:', e);
+  }
+}
+
+function changePage(delta) {
+  const next = currentPage + delta;
+  if (next >= 1 && next <= totalPages) loadPage(next);
+}
+
+// ---- Stats ----
+async function loadStats() {
+  try {
+    const resp = await fetch('/api/stats');
+    statsData = await resp.json();
+    hasEmbeddings = statsData.has_embeddings;
+    renderStats();
+    updateEmbeddingButtons();
+  } catch (e) {
+    console.error('Failed to load stats:', e);
+  }
+}
+
+function renderStats() {
+  const s = statsData;
+  document.getElementById('pathBadge').textContent = s.input_path || '';
+  document.getElementById('docCount').textContent = `${s.total.toLocaleString()} documents`;
+
+  const grid = document.getElementById('statsGrid');
+  grid.innerHTML = `
+    <div class="stat-card"><div class="label">Documents</div><div class="value accent">${s.total.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Total Characters</div><div class="value">${s.total_chars.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Avg Length</div><div class="value green">${s.avg_length.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Median Length</div><div class="value">${s.median_length.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Min Length</div><div class="value">${s.min_length.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Max Length</div><div class="value orange">${s.max_length.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Fields</div><div class="value" style="font-size:16px">${(s.fields||[]).join(', ')}</div></div>
+    <div class="stat-card"><div class="label">Embeddings</div><div class="value ${s.has_embeddings?'green':''}">${s.has_embeddings ? s.embedding_dim+'d' : 'None'}</div></div>
+  `;
+
+  // Length distribution chart
+  if (s.length_distribution) {
+    Plotly.newPlot('lengthChart', [{
+      x: s.length_distribution.labels,
+      y: s.length_distribution.counts,
+      type: 'bar',
+      marker: { color: '#6c5ce7', opacity: 0.85, line: { color: '#a29bfe', width: 1 } },
+    }], {
+      paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+      font: { color: '#8b8fa3', size: 12 },
+      xaxis: { title: 'Character Length', gridcolor: '#2a2d37' },
+      yaxis: { title: 'Count', gridcolor: '#2a2d37' },
+      margin: { t: 10, b: 50, l: 60, r: 20 },
+    }, { responsive: true, displayModeBar: false });
+  }
+}
+
+// ---- Document detail ----
+async function showDocument(idx) {
+  try {
+    const resp = await fetch(`/api/document/${idx}`);
+    const data = await resp.json();
+    document.getElementById('modalTitle').textContent = `Document #${idx}`;
+    const body = document.getElementById('modalBody');
+    body.innerHTML = Object.entries(data.document).map(([k, v]) => `
+      <div class="doc-field">
+        <div class="field-name">${escHtml(k)}</div>
+        <div class="field-value">${escHtml(String(v))}</div>
+      </div>
+    `).join('');
+    document.getElementById('modalOverlay').classList.add('open');
+  } catch (e) {
+    console.error('Failed to load document:', e);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ---- Semantic search ----
+async function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const resp = await fetch(`/api/search?q=${encodeURIComponent(q)}&k=20`);
+    const data = await resp.json();
+
+    if (data.error) {
+      document.getElementById('searchResults').innerHTML = `<div class="empty-state"><p>${escHtml(data.error)}</p></div>`;
+      return;
+    }
+
+    const container = document.getElementById('searchResults');
+    if (!data.results || data.results.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>No results found</p></div>';
+      return;
+    }
+
+    container.innerHTML = data.results.map(r => `
+      <div class="search-result" onclick="showDocument(${r.idx})">
+        <div class="sr-header">
+          <span class="sr-idx">#${r.idx}</span>
+          <span class="sr-score">Score: ${r.score}</span>
+        </div>
+        <div class="sr-text">${escHtml(r.text_preview)}</div>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('searchResults').innerHTML = `<div class="empty-state"><p>Search failed: ${escHtml(e.message)}</p></div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search';
+  }
+}
+
+// ---- Embeddings ----
+function updateEmbeddingButtons() {
+  document.getElementById('computeEmbBtn').textContent = hasEmbeddings ? 'Recompute Embeddings' : 'Compute Embeddings';
+  document.getElementById('loadUmapBtn').disabled = !hasEmbeddings;
+}
+
+async function computeEmbeddings() {
+  const btn = document.getElementById('computeEmbBtn');
+  const status = document.getElementById('umapStatus');
+  btn.disabled = true;
+  status.innerHTML = '<span class="spinner"></span> Computing embeddings... this may take a while';
+
+  try {
+    const resp = await fetch('/api/embed', { method: 'POST' });
+    const data = await resp.json();
+    if (data.error) {
+      status.textContent = 'Error: ' + data.error;
+    } else {
+      hasEmbeddings = true;
+      status.textContent = `Embeddings ready: ${data.shape.join(' x ')}`;
+      updateEmbeddingButtons();
+      // Refresh stats
+      loadStats();
+    }
+  } catch (e) {
+    status.textContent = 'Failed: ' + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function loadUmap() {
+  const btn = document.getElementById('loadUmapBtn');
+  const status = document.getElementById('umapStatus');
+  btn.disabled = true;
+  status.innerHTML = '<span class="spinner"></span> Computing UMAP projection...';
+
+  try {
+    const resp = await fetch('/api/embeddings/umap');
+    const data = await resp.json();
+
+    if (data.error) {
+      status.textContent = 'Error: ' + data.error;
+      btn.disabled = false;
+      return;
+    }
+
+    const points = data.points;
+    status.textContent = `Showing ${points.length.toLocaleString()} of ${data.total_docs.toLocaleString()} documents`;
+
+    Plotly.newPlot('umapChart', [{
+      x: points.map(p => p.x),
+      y: points.map(p => p.y),
+      text: points.map(p => `#${p.idx}: ${p.text_preview.substring(0, 80)}`),
+      customdata: points.map(p => p.idx),
+      mode: 'markers',
+      type: 'scattergl',
+      marker: {
+        size: 4,
+        color: '#6c5ce7',
+        opacity: 0.6,
+        line: { width: 0 },
+      },
+      hovertemplate: '%{text}<extra></extra>',
+    }], {
+      paper_bgcolor: 'transparent',
+      plot_bgcolor: '#181a20',
+      font: { color: '#8b8fa3', size: 11 },
+      xaxis: { showgrid: false, zeroline: false, showticklabels: false },
+      yaxis: { showgrid: false, zeroline: false, showticklabels: false },
+      margin: { t: 10, b: 10, l: 10, r: 10 },
+      hovermode: 'closest',
+    }, { responsive: true, displayModeBar: false });
+
+    // Click to open document
+    document.getElementById('umapChart').on('plotly_click', function(data) {
+      if (data.points && data.points.length > 0) {
+        const idx = data.points[0].customdata;
+        showDocument(idx);
+      }
+    });
+  } catch (e) {
+    status.textContent = 'Failed: ' + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ---- Helpers ----
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+function escAttr(s) {
+  return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Keyboard shortcut: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ---- Init ----
+(async function init() {
+  await loadStats();
+  await loadPage(1);
+})();
+</script>
+</body>
+</html>

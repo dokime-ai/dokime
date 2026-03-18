@@ -1,0 +1,83 @@
+# Dokime — Advanced Pipeline Configuration
+# ==========================================
+# This config demonstrates every available filter.
+# Copy and edit to build your own curation pipeline.
+#
+# Usage:
+#   dokime curate data/raw.jsonl data/curated.parquet --config examples/advanced_pipeline.yaml
+
+name: advanced-curation
+
+filters:
+  # --- Required fields ---
+  - FieldExistsFilter:
+      required_field: text
+
+  # --- Length and structure ---
+  - LengthFilter:
+      min_length: 50
+      max_length: 100000
+      text_field: text
+
+  - WordCountFilter:
+      min_words: 10
+      max_words: 50000
+      text_field: text
+
+  - LineCountFilter:
+      min_lines: 1
+      max_lines: 10000
+      text_field: text
+
+  # --- Content quality ---
+  - WhitespaceFilter:
+      max_whitespace_ratio: 0.4
+      text_field: text
+
+  - RepetitionFilter:
+      max_repetition_ratio: 0.3
+      ngram_size: 5
+      text_field: text
+
+  - SpecialCharFilter:
+      max_special_ratio: 0.3
+      text_field: text
+
+  - AlphaFilter:
+      min_alpha_ratio: 0.5
+      text_field: text
+
+  # --- URL and boilerplate ---
+  - URLFilter:
+      max_url_ratio: 0.1
+      text_field: text
+
+  - StopwordFilter:
+      min_stopword_ratio: 0.05
+      text_field: text
+
+  # --- Custom pattern filtering ---
+  # Exclude documents containing common boilerplate patterns
+  - RegexFilter:
+      pattern: "(?i)(cookie policy|privacy notice|terms of service|subscribe to our newsletter)"
+      exclude: true
+      text_field: text
+
+  # --- Language detection ---
+  # Requires: pip install dokime-ai[nlp]
+  - LanguageFilter:
+      languages:
+        - en
+      min_confidence: 0.5
+      text_field: text
+
+  # --- Deduplication ---
+  # Exact dedup (SHA-256, no extra deps)
+  - ExactDedup: {}
+
+  # Fuzzy dedup (MinHash-LSH)
+  # Requires: pip install dokime-ai[dedup]
+  - MinHashDedup:
+      threshold: 0.8
+      num_perm: 128
+      text_field: text

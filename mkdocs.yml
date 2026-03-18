@@ -1,0 +1,65 @@
+site_name: Dokime
+site_description: Open-source data curation toolkit for ML training datasets
+site_url: https://dokime-ai.github.io/dokime
+site_dir: mkdocs_site
+repo_url: https://github.com/dokime-ai/dokime
+repo_name: dokime-ai/dokime
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: purple
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+    - scheme: default
+      primary: purple
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+  - User Guide:
+      - Filters: user-guide/filters.md
+      - Pipelines: user-guide/pipelines.md
+      - Embeddings: user-guide/embeddings.md
+      - Attribution: user-guide/attribution.md
+      - CLI Reference: user-guide/cli.md
+  - API Reference:
+      - dokime.core: api/core.md
+      - dokime.embeddings: api/embeddings.md
+      - dokime.attribution: api/attribution.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            show_root_heading: true
+            heading_level: 3
+            docstring_style: google
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details

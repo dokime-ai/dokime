@@ -1,0 +1,175 @@
+[build-system]
+requires = ["setuptools>=70.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dokime"
+dynamic = ["version"]
+description = "Open-source data curation toolkit for ML. Filter, deduplicate, score, and explore your training data."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "Dokime AI" },
+]
+keywords = [
+    "machine-learning",
+    "data-curation",
+    "data-quality",
+    "deduplication",
+    "embeddings",
+    "mlops",
+    "training-data",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "pyarrow>=12.0",
+    "pydantic>=2.0,<3",
+    "rich>=13.0",
+    "typer>=0.9",
+    "fsspec>=2023.6",
+    "tqdm>=4.60",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+io = [
+    "datasets>=2.16",
+    "pandas>=2.0",
+]
+nlp = [
+    "lingua-language-detector>=2.0",
+    "tokenizers>=0.15",
+]
+embeddings = [
+    "sentence-transformers>=2.3",
+    "faiss-cpu>=1.7",
+]
+dedup = [
+    "datasketch>=1.6",
+]
+explore = [
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+]
+attribution = [
+    "traker>=0.3",
+    "transformers>=4.36",
+    "torch>=2.1",
+]
+all = [
+    "dokime[io,nlp,embeddings,dedup,explore,attribution]",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "pytest-xdist>=3.5",
+    "ruff>=0.4",
+    "types-PyYAML>=6.0",
+    "mypy>=1.8",
+    "pre-commit>=3.5",
+]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/dokime-ai/dokime"
+Documentation = "https://dokime-ai.github.io/dokime"
+Repository = "https://github.com/dokime-ai/dokime"
+Issues = "https://github.com/dokime-ai/dokime/issues"
+Changelog = "https://github.com/dokime-ai/dokime/blob/main/CHANGELOG.md"
+
+[project.scripts]
+dokime = "dokime.cli:app"
+
+# ---- Setuptools ----
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+write_to = "src/dokime/_version.py"
+
+# ---- Ruff ----
+
+[tool.ruff]
+target-version = "py310"
+line-length = 119
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "SIM",   # flake8-simplify
+    "RUF",   # ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["dokime"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---- Pytest ----
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "gpu: marks tests requiring GPU",
+]
+
+# ---- Mypy ----
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true
+show_error_codes = true
+
+# ---- Coverage ----
+
+[tool.coverage.run]
+source = ["dokime"]
+branch = true
+omit = ["*/tests/*", "*/_version.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.",
+]

@@ -1,0 +1,13 @@
+name: basic-quality-filters
+
+filters:
+  - LengthFilter:
+      min_length: 20
+      max_length: 100000
+  - WhitespaceFilter:
+      max_whitespace_ratio: 0.5
+  - SpecialCharFilter:
+      max_special_ratio: 0.3
+  - RepetitionFilter:
+      max_repetition_ratio: 0.5
+  - ExactDedup: {}

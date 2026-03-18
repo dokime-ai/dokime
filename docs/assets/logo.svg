@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+  <!-- Wheat icon -->
+  <g transform="translate(16, 8)" fill="#7C3AED">
+    <!-- Stem -->
+    <rect x="11" y="28" width="2.5" height="38" rx="1.25" />
+    <!-- Grains - left -->
+    <ellipse cx="7" cy="10" rx="4.5" ry="9" transform="rotate(-15, 7, 10)" />
+    <ellipse cx="5" cy="26" rx="3.5" ry="7" transform="rotate(-12, 5, 26)" />
+    <!-- Grains - right -->
+    <ellipse cx="18" cy="10" rx="4.5" ry="9" transform="rotate(15, 18, 10)" />
+    <ellipse cx="20" cy="26" rx="3.5" ry="7" transform="rotate(12, 20, 26)" />
+    <!-- Center grain -->
+    <ellipse cx="12.5" cy="4" rx="3.5" ry="8" />
+  </g>
+  <!-- Text: Winnow -->
+  <text x="52" y="55" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="42" font-weight="600" fill="#1E1B4B" letter-spacing="-0.5">Winnow</text>
+</svg>

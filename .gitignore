@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+.venv312/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Type checking
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Distribution
+*.tar.gz
+
+# Data (don't commit datasets)
+*.parquet
+*.jsonl
+*.csv
+!tests/fixtures/**
+src/winnow/_version.py
+# MkDocs build output
+mkdocs_site/
+
+# Landing page build output
+site/node_modules/
+site/dist/
+site/.astro/
+data/
