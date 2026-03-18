@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <g transform="translate(3, 1)" fill="#7C3AED">
+    <!-- Stem -->
+    <rect x="12" y="14" width="2" height="16" rx="1" />
+    <!-- Grains - left -->
+    <ellipse cx="8" cy="5" rx="4" ry="7.5" transform="rotate(-15, 8, 5)" />
+    <ellipse cx="6.5" cy="15" rx="3" ry="5.5" transform="rotate(-12, 6.5, 15)" />
+    <!-- Grains - right -->
+    <ellipse cx="18" cy="5" rx="4" ry="7.5" transform="rotate(15, 18, 5)" />
+    <ellipse cx="19.5" cy="15" rx="3" ry="5.5" transform="rotate(12, 19.5, 15)" />
+    <!-- Center grain -->
+    <ellipse cx="13" cy="1" rx="3" ry="6.5" />
+  </g>
+</svg>
