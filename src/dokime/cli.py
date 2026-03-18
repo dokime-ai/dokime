@@ -207,25 +207,29 @@ def outliers(
 @app.command()
 def score(
     input_path: str = typer.Argument(..., help="Path to dataset"),
-    output_path: str = typer.Argument(..., help="Path for scored output (JSONL or Parquet)"),
+    output_path: str | None = typer.Argument(None, help="Optional: save scored output (JSONL or Parquet)"),
     text_field: str = typer.Option("text", "--field", help="Field containing text"),
+    worst: int = typer.Option(5, "--worst", "-w", help="Number of worst documents to show"),
 ) -> None:
-    """Add quality scores to every document in a dataset."""
-    from dokime.io.readers import auto_read
-    from dokime.io.writers import StreamingWriter
-    from dokime.quality.scoring import QualityScorer
+    """Score your training data quality. Get a grade in 10 seconds."""
+    from dokime.quality.report import run_report
 
-    scorer = QualityScorer(text_field=text_field)
-    writer = StreamingWriter(output_path)
+    run_report(input_path, text_field=text_field, show_worst=worst)
 
-    count = 0
-    for doc in auto_read(input_path):
-        scored = scorer.score(doc)
-        writer.write(scored)
-        count += 1
+    # Optionally save scored output
+    if output_path is not None:
+        from dokime.io.readers import auto_read
+        from dokime.io.writers import StreamingWriter
+        from dokime.quality.scoring import QualityScorer
 
-    writer.close()
-    typer.echo(f"Scored {count:,} documents -> {output_path}")
+        scorer = QualityScorer(text_field=text_field)
+        writer = StreamingWriter(output_path)
+        count = 0
+        for doc in auto_read(input_path):
+            writer.write(scorer.score(doc))
+            count += 1
+        writer.close()
+        typer.echo(f"Scored {count:,} documents -> {output_path}")
 
 
 @app.command()
