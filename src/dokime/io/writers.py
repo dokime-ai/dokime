@@ -82,7 +82,7 @@ class StreamingWriter:
         self._jsonl_file: Any = None
 
         if self.format == "jsonl":
-            self._jsonl_file = Path(self.path).open("w")  # noqa: SIM115
+            self._jsonl_file = Path(self.path).open("w", encoding="utf-8")  # noqa: SIM115
 
     def write(self, doc: dict[str, Any]) -> None:
         """Write a single document. Flushes to disk when buffer is full."""

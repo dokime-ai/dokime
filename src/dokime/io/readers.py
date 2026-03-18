@@ -2,20 +2,29 @@
 
 from __future__ import annotations
 
+import json
+import logging
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+logger = logging.getLogger(__name__)
+
 
 def read_jsonl(path: str | Path) -> Iterator[dict[str, Any]]:
-    """Read a JSONL file, yielding one document dict per line."""
-    import json
+    """Read a JSONL file, yielding one document dict per line.
 
-    with open(path) as f:
-        for line in f:
+    Skips blank lines and malformed JSON lines with a warning.
+    """
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for line_num, line in enumerate(f, 1):
             line = line.strip()
-            if line:
+            if not line:
+                continue
+            try:
                 yield json.loads(line)
+            except json.JSONDecodeError:
+                logger.warning("Skipping malformed JSON at line %d in %s", line_num, path)
 
 
 def read_parquet(path: str | Path) -> Iterator[dict[str, Any]]:
@@ -27,11 +36,11 @@ def read_parquet(path: str | Path) -> Iterator[dict[str, Any]]:
         yield from batch.to_pylist()
 
 
-def read_csv(path: str | Path, text_field: str = "text") -> Iterator[dict[str, Any]]:
+def read_csv(path: str | Path) -> Iterator[dict[str, Any]]:
     """Read a CSV file, yielding one document dict per row."""
     import csv
 
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8", errors="replace") as f:
         reader = csv.DictReader(f)
         for row in reader:
             yield dict(row)
@@ -40,12 +49,12 @@ def read_csv(path: str | Path, text_field: str = "text") -> Iterator[dict[str, A
 def read_dataset(path: str, split: str = "train") -> Iterator[dict[str, Any]]:
     """Read a HuggingFace dataset, yielding one document dict per example.
 
-    Requires: pip install dokime-ai[io]
+    Requires: pip install dokime[io]
     """
     try:
         from datasets import load_dataset
     except ImportError:
-        raise ImportError("Install datasets support: pip install dokime-ai[io]") from None
+        raise ImportError("Install datasets support: pip install dokime[io]") from None
 
     ds = load_dataset(path, split=split, streaming=True)
     yield from ds
@@ -65,7 +74,6 @@ def auto_read(path: str) -> Iterator[dict[str, Any]]:
     elif p.suffix == ".csv":
         yield from read_csv(p)
     elif not p.exists():
-        # Assume it's a HuggingFace dataset ID
         yield from read_dataset(path)
     else:
         raise ValueError(f"Unsupported file format: {p.suffix}. Supported: .jsonl, .parquet, .csv")
