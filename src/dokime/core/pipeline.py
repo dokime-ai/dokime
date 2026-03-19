@@ -38,6 +38,7 @@ class Pipeline:
     def __init__(self, name: str = "default") -> None:
         self.name = name
         self.filters: list[Filter] = []
+        self._config: dict[str, Any] | None = None
 
     def add_filter(self, f: Filter) -> Pipeline:
         """Add a filter to the pipeline. Returns self for chaining."""
