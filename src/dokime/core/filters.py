@@ -291,7 +291,7 @@ class LanguageFilter(Filter):
     Uses lingua-language-detector (pure Python, no compilation needed).
     Falls back to fastText if installed and lingua is not available.
 
-    Requires: pip install dokime-ai[nlp]
+    Requires: pip install dokime[nlp]
 
     Language codes: ISO 639-1 lowercase (e.g., "en", "de", "fr", "zh", "ja").
     """
@@ -321,9 +321,7 @@ class LanguageFilter(Filter):
         except ImportError:
             pass
 
-        raise ImportError(
-            "Install language detection: pip install dokime-ai[nlp]\n  (installs lingua-language-detector)"
-        )
+        raise ImportError("Install language detection: pip install dokime[nlp]\n  (installs lingua-language-detector)")
 
     def _get_detector(self) -> Any:
         if self._detector is not None:

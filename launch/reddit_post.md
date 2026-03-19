@@ -20,8 +20,8 @@ We open-sourced Dokime, a Python toolkit for curating ML training data. It conso
 **Installation:**
 
 ```bash
-pip install dokime-ai            # core: filters, exact dedup, CLI
-pip install "dokime-ai[all]"     # everything: embeddings, fuzzy dedup, language detection, HF datasets
+pip install dokime            # core: filters, exact dedup, CLI
+pip install "dokime[all]"     # everything: embeddings, fuzzy dedup, language detection, HF datasets
 ```
 
 **Quick example:**
@@ -80,6 +80,6 @@ Contributions welcome. Apache 2.0 license.
 **Links:**
 
 - GitHub: https://github.com/dokime-ai/dokime
-- PyPI: https://pypi.org/project/dokime-ai/
+- PyPI: https://pypi.org/project/dokime/
 - Docs: https://dokime-ai.github.io/dokime
 - HuggingFace Space: https://huggingface.co/spaces/dokime-ai/dokime

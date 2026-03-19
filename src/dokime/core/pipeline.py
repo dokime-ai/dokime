@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import time
 from collections.abc import Iterator
 from pathlib import Path
@@ -14,6 +15,7 @@ from rich.table import Table
 from dokime.core.filters import Filter
 from dokime.core.registry import FILTER_REGISTRY
 
+logger = logging.getLogger(__name__)
 console = Console()
 
 
@@ -86,6 +88,7 @@ class Pipeline:
         """Stream documents through the filter chain, yielding kept documents.
 
         This is the core streaming API — never buffers the full dataset.
+        Documents that raise exceptions during filtering are skipped with a warning.
 
         Args:
             data: Iterator of document dicts, or a file path string.
@@ -98,14 +101,17 @@ class Pipeline:
 
             data = auto_read(data)
 
-        for sample in data:
-            kept = True
-            for f in self.filters:
-                if not f.filter(sample):
-                    kept = False
-                    break
-            if kept:
-                yield sample
+        for doc_idx, sample in enumerate(data):
+            try:
+                kept = True
+                for f in self.filters:
+                    if not f.filter(sample):
+                        kept = False
+                        break
+                if kept:
+                    yield sample
+            except Exception:
+                logger.warning("Skipping document %d due to filter error", doc_idx, exc_info=True)
 
     def run(
         self,
@@ -152,22 +158,30 @@ class Pipeline:
         reader = auto_read(input_path)
         progress = tqdm(reader, desc="Processing", unit=" docs", disable=quiet)
 
+        error_count = 0
         for sample in progress:
             total_read += 1
-            kept = True
 
-            for f in self.filters:
-                if not f.filter(sample):
-                    filter_stats[f.name()] += 1
-                    kept = False
-                    break
+            try:
+                kept = True
+                for f in self.filters:
+                    if not f.filter(sample):
+                        filter_stats[f.name()] += 1
+                        kept = False
+                        break
 
-            if kept:
-                total_kept += 1
-                if writer is not None:
-                    writer.write(sample)
+                if kept:
+                    total_kept += 1
+                    if writer is not None:
+                        writer.write(sample)
+            except Exception:
+                error_count += 1
+                logger.warning("Skipping document %d due to filter error", total_read, exc_info=True)
 
         progress.close()
+
+        if error_count > 0 and not quiet:
+            console.print(f"  [yellow]WARNING: {error_count:,} documents skipped due to errors[/]")
 
         if writer is not None:
             writer.close()
@@ -185,6 +199,7 @@ class Pipeline:
             "total_read": total_read,
             "total_kept": total_kept,
             "total_removed": total_removed,
+            "errors_skipped": error_count,
             "removal_rate_pct": round(removal_rate, 2),
             "filters_applied": len(self.filters),
             "per_filter_removed": filter_stats,

@@ -67,6 +67,7 @@ def curate(
 @app.command()
 def stats(
     input_path: str = typer.Argument(..., help="Path to dataset to analyze"),
+    text_field: str = typer.Option("text", "--field", help="Field containing text"),
 ) -> None:
     """Show basic statistics about a dataset."""
     from rich.console import Console
@@ -84,7 +85,7 @@ def stats(
 
     for sample in auto_read(input_path):
         total += 1
-        text = sample.get("text", "")
+        text = sample.get(text_field, "")
         length = len(text)
         total_chars += length
         min_len = min(min_len, length)
@@ -112,6 +113,7 @@ def embed(
     input_path: str = typer.Argument(..., help="Path to input dataset"),
     output_path: str = typer.Argument(..., help="Path to save embeddings (.npy)"),
     model: str = typer.Option("all-MiniLM-L6-v2", "--model", "-m", help="Sentence-transformer model name"),
+    text_field: str = typer.Option("text", "--field", help="Field containing text"),
     batch_size: int = typer.Option(64, "--batch-size", help="Batch size for encoding"),
     device: str | None = typer.Option(None, "--device", help="Device (cpu, cuda, etc.)"),
 ) -> None:
@@ -122,6 +124,7 @@ def embed(
     compute_embeddings(
         data=auto_read(input_path),
         model_name=model,
+        text_field=text_field,
         batch_size=batch_size,
         output_path=output_path,
         device=device,
@@ -134,6 +137,7 @@ def search(
     query: str = typer.Argument(..., help="Search query"),
     embeddings_path: str | None = typer.Option(None, "--embeddings", "-e", help="Path to precomputed .npy embeddings"),
     model: str = typer.Option("all-MiniLM-L6-v2", "--model", "-m", help="Sentence-transformer model name"),
+    text_field: str = typer.Option("text", "--field", help="Field containing text"),
     k: int = typer.Option(5, "-k", help="Number of results"),
 ) -> None:
     """Semantic search over a dataset."""
@@ -153,6 +157,7 @@ def search(
         documents, embeddings = compute_embeddings(
             data=auto_read(input_path),
             model_name=model,
+            text_field=text_field,
         )
 
     emb_model = EmbeddingModel(model)
@@ -161,7 +166,7 @@ def search(
 
     console.print(f"\n[bold blue]Dokime[/] — Top {k} results for: [bold]{query}[/]\n")
     for i, r in enumerate(results, 1):
-        text_preview = r.document.get("text", "")[:120].replace("\n", " ")
+        text_preview = r.document.get(text_field, "")[:120].replace("\n", " ")
         console.print(f"  [bold]{i}.[/] [green]{r.score:.4f}[/]  {text_preview}")
     console.print()
 
@@ -171,6 +176,7 @@ def outliers(
     input_path: str = typer.Argument(..., help="Path to dataset"),
     embeddings_path: str | None = typer.Option(None, "--embeddings", "-e", help="Path to precomputed .npy embeddings"),
     model: str = typer.Option("all-MiniLM-L6-v2", "--model", "-m", help="Sentence-transformer model name"),
+    text_field: str = typer.Option("text", "--field", help="Field containing text"),
     k: int = typer.Option(10, "-k", help="Number of neighbors for scoring"),
     top_n: int = typer.Option(10, "--top", "-n", help="Number of outliers to show"),
 ) -> None:
@@ -191,6 +197,7 @@ def outliers(
         documents, embeddings = compute_embeddings(
             data=auto_read(input_path),
             model_name=model,
+            text_field=text_field,
         )
 
     scorer = AnomalyScorer(embeddings)
@@ -199,7 +206,7 @@ def outliers(
 
     console.print(f"\n[bold blue]Dokime[/] — Top {top_n} outliers\n")
     for rank, idx in enumerate(outlier_indices, 1):
-        text_preview = documents[idx].get("text", "")[:120].replace("\n", " ")
+        text_preview = documents[idx].get(text_field, "")[:120].replace("\n", " ")
         console.print(f"  [bold]{rank}.[/] [red]{scores[idx]:.4f}[/]  {text_preview}")
     console.print()
 
@@ -268,12 +275,12 @@ def attribute(
     """Find training examples that help or hurt model performance.
 
     Uses TRAK-based data attribution to score each training example's
-    influence on evaluation performance. Requires: pip install dokime-ai[attribution]
+    influence on evaluation performance. Requires: pip install dokime[attribution]
     """
     try:
         from dokime.attribution.engine import AttributionEngine
     except ImportError:
-        typer.echo("Install attribution support: pip install dokime-ai[attribution]")
+        typer.echo("Install attribution support: pip install dokime[attribution]")
         raise typer.Exit(1) from None
 
     from rich.console import Console
@@ -321,7 +328,7 @@ def explore(
     try:
         from dokime.explore.server import launch
     except ImportError:
-        typer.echo("Install explore dependencies: pip install dokime-ai[explore]")
+        typer.echo("Install explore dependencies: pip install dokime[explore]")
         raise typer.Exit(1) from None
 
     launch(input_path=input_path, host=host, port=port, embeddings_path=embeddings)

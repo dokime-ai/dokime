@@ -269,11 +269,15 @@ def run_report(
     # Recommendations
     recs = []
     if duplicate_count > 0:
-        recs.append(f"Remove {duplicate_count:,} duplicates -> [bold]dokime curate {input_path} clean.jsonl --dedup[/]")
+        recs.append(
+            f"Remove {duplicate_count:,} duplicates -> [bold]dokime curate {input_path} clean.jsonl --dedup[/]"
+        )
     if low_quality > 0:
         recs.append(f"Review {low_quality:,} low-quality docs -> [bold]dokime explore {input_path}[/]")
     if short_docs > total * 0.1:
-        recs.append(f"Filter {short_docs:,} short docs -> [bold]dokime curate {input_path} clean.jsonl --min-length 50[/]")
+        recs.append(
+            f"Filter {short_docs:,} short docs -> [bold]dokime curate {input_path} clean.jsonl --min-length 50[/]"
+        )
 
     if recs:
         console.print("[bold]Recommendations:[/]")

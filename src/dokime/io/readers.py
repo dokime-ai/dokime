@@ -27,12 +27,15 @@ def read_jsonl(path: str | Path) -> Iterator[dict[str, Any]]:
                 logger.warning("Skipping malformed JSON at line %d in %s", line_num, path)
 
 
-def read_parquet(path: str | Path) -> Iterator[dict[str, Any]]:
-    """Read a Parquet file, yielding one document dict per row."""
+def read_parquet(path: str | Path, batch_size: int = 10_000) -> Iterator[dict[str, Any]]:
+    """Read a Parquet file, yielding one document dict per row.
+
+    Uses iter_batches for constant memory usage — never loads the full file.
+    """
     import pyarrow.parquet as pq
 
-    table = pq.read_table(str(path))
-    for batch in table.to_batches():
+    pf = pq.ParquetFile(str(path))
+    for batch in pf.iter_batches(batch_size=batch_size):
         yield from batch.to_pylist()
 
 

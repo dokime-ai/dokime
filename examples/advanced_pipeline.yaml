@@ -64,7 +64,7 @@ filters:
       text_field: text
 
   # --- Language detection ---
-  # Requires: pip install dokime-ai[nlp]
+  # Requires: pip install dokime[nlp]
   - LanguageFilter:
       languages:
         - en
@@ -76,7 +76,7 @@ filters:
   - ExactDedup: {}
 
   # Fuzzy dedup (MinHash-LSH)
-  # Requires: pip install dokime-ai[dedup]
+  # Requires: pip install dokime[dedup]
   - MinHashDedup:
       threshold: 0.8
       num_perm: 128

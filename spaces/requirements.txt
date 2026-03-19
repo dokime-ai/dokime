@@ -1,4 +1,4 @@
-dokime-ai>=0.1.0
+dokime>=0.1.0
 gradio>=4.0
 sentence-transformers>=2.3
 faiss-cpu>=1.7

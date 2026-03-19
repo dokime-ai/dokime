@@ -73,7 +73,7 @@ class AttributionEngine:
             from transformers import AutoModelForCausalLM, AutoTokenizer
         except ImportError:
             raise ImportError(
-                "Install attribution support: pip install dokime-ai[attribution]\n"
+                "Install attribution support: pip install dokime[attribution]\n"
                 "  (requires transformers, torch, traker)"
             ) from None
 

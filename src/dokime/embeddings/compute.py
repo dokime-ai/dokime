@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -10,6 +11,7 @@ import numpy as np
 from rich.console import Console
 from tqdm import tqdm
 
+logger = logging.getLogger(__name__)
 console = Console()
 
 
@@ -26,7 +28,7 @@ class EmbeddingModel:
         try:
             from sentence_transformers import SentenceTransformer
         except ImportError:
-            raise ImportError("Install embedding support: pip install dokime-ai[embeddings]") from None
+            raise ImportError("Install embedding support: pip install dokime[embeddings]") from None
 
         self.model_name = model_name
         self.model = SentenceTransformer(model_name, device=device)
@@ -79,13 +81,28 @@ def compute_embeddings(
 
     model = EmbeddingModel(model_name, device=device)
 
-    # Collect all documents and texts
+    # Collect documents, extracting text in the same pass to avoid a separate texts list
     documents: list[dict[str, Any]] = []
     texts: list[str] = []
+    missing_field_count = 0
 
     for sample in tqdm(data, desc="Loading", unit=" docs", disable=quiet):
         documents.append(sample)
-        texts.append(sample.get(text_field, ""))
+        if text_field in sample:
+            texts.append(sample[text_field])
+        else:
+            missing_field_count += 1
+            texts.append("")
+
+    if missing_field_count > 0:
+        logger.warning(
+            "%d of %d documents lack field '%s' — embedded as empty string. Check your --field setting.",
+            missing_field_count,
+            len(documents),
+            text_field,
+        )
+        if not quiet:
+            console.print(f"  [yellow]WARNING: {missing_field_count:,} documents missing field '{text_field}'[/]")
 
     if not quiet:
         console.print(f"  Loaded {len(documents):,} documents")

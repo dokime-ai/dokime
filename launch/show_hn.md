@@ -9,6 +9,6 @@ The design philosophy is "workbench, not pipeline engine." DataTrove and Data-Ju
 We also ran what we believe is the first independent evaluation of JEPA-SCORE (NeurIPS 2025) for out-of-distribution detection. Short version: k-NN distance beats JEPA-SCORE by 24 AUROC points and is 10,000x faster. Results and code are in the experiments/ directory.
 
 - GitHub: https://github.com/dokime-ai/dokime
-- PyPI: https://pypi.org/project/dokime-ai/
+- PyPI: https://pypi.org/project/dokime/
 - Docs: https://dokime-ai.github.io/dokime
 - HuggingFace Space: https://huggingface.co/spaces/dokime-ai/dokime

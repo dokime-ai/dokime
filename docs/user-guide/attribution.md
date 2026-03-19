@@ -2,7 +2,7 @@
 
 Dokime's attribution engine answers: **"Which training examples help or hurt your model?"**
 
-It uses [TRAK](https://github.com/MadryLab/trak) to compute per-example influence scores. Requires `dokime-ai[attribution]` (installs torch, transformers, traker).
+It uses [TRAK](https://github.com/MadryLab/trak) to compute per-example influence scores. Requires `dokime[attribution]` (installs torch, transformers, traker).
 
 ## Python API
 

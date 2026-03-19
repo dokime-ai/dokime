@@ -27,13 +27,13 @@ That is what we built.
 Dokime is a Python toolkit for curating ML training data. One install. Ten CLI commands. Sixteen filters. Three dedup methods. Embedding-based semantic search and outlier detection. Quality scoring. HuggingFace Hub integration. YAML configuration. And a Python SDK for when you need to go beyond the CLI.
 
 ```bash
-pip install dokime-ai
+pip install dokime
 ```
 
 That gives you heuristic filters, exact dedup, and the CLI. For the full toolkit:
 
 ```bash
-pip install "dokime-ai[all]"
+pip install "dokime[all]"
 ```
 
 The quickest way to see what Dokime does is to run it:
@@ -387,18 +387,18 @@ Dokime is a curation workbench. It helps you understand your data, decide what t
 ## Get Started
 
 ```bash
-pip install dokime-ai          # core (filters, exact dedup, CLI)
-pip install "dokime-ai[all]"   # everything (embeddings, fuzzy dedup, language detection, HF datasets)
+pip install dokime          # core (filters, exact dedup, CLI)
+pip install "dokime[all]"   # everything (embeddings, fuzzy dedup, language detection, HF datasets)
 ```
 
 **Links:**
 
 - **GitHub:** [github.com/dokime-ai/dokime](https://github.com/dokime-ai/dokime)
-- **PyPI:** [pypi.org/project/dokime-ai](https://pypi.org/project/dokime-ai/)
+- **PyPI:** [pypi.org/project/dokime](https://pypi.org/project/dokime/)
 - **Docs:** [dokime-ai.github.io/dokime](https://dokime-ai.github.io/dokime)
 
 Star the repo if this is useful to you. Open an issue if something is broken. Open a PR if you want to make it better.
 
 ```bash
-pip install dokime-ai
+pip install dokime
 ```

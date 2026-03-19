@@ -1,6 +1,6 @@
 # Embeddings
 
-Dokime uses sentence-transformers to compute embeddings and FAISS for fast similarity search. Requires `dokime-ai[embeddings]`.
+Dokime uses sentence-transformers to compute embeddings and FAISS for fast similarity search. Requires `dokime[embeddings]`.
 
 ## Compute embeddings
 

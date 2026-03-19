@@ -51,12 +51,12 @@ We're early. Contributions welcome. Apache 2.0.
 **Tweet 7:**
 Links:
 - GitHub: https://github.com/dokime-ai/dokime
-- PyPI: https://pypi.org/project/dokime-ai/
+- PyPI: https://pypi.org/project/dokime/
 - Docs: https://dokime-ai.github.io/dokime
 - HuggingFace Space: https://huggingface.co/spaces/dokime-ai/dokime
 
 ```
-pip install dokime-ai
+pip install dokime
 ```
 
 ---

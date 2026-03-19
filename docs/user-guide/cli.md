@@ -48,7 +48,7 @@ Outputs document count, total characters, average/min/max length.
 
 ## dokime embed
 
-Compute embeddings and save as `.npy`. Requires `dokime-ai[embeddings]`.
+Compute embeddings and save as `.npy`. Requires `dokime[embeddings]`.
 
 ```bash
 dokime embed data/curated.jsonl embeddings.npy \
@@ -57,7 +57,7 @@ dokime embed data/curated.jsonl embeddings.npy \
 
 ## dokime search
 
-Semantic search over a dataset. Requires `dokime-ai[embeddings]`.
+Semantic search over a dataset. Requires `dokime[embeddings]`.
 
 ```bash
 dokime search data/curated.jsonl "your query here" -k 10
@@ -68,7 +68,7 @@ dokime search data/curated.jsonl "your query" -e embeddings.npy
 
 ## dokime outliers
 
-Find anomalous documents via k-NN distance. Requires `dokime-ai[embeddings]`.
+Find anomalous documents via k-NN distance. Requires `dokime[embeddings]`.
 
 ```bash
 dokime outliers data/curated.jsonl --top 20 -k 10
@@ -79,7 +79,7 @@ dokime outliers data/curated.jsonl -e embeddings.npy --top 20
 
 ## dokime attribute
 
-Score training data influence on model performance. Requires `dokime-ai[attribution]`.
+Score training data influence on model performance. Requires `dokime[attribution]`.
 
 ```bash
 dokime attribute train.jsonl eval.jsonl \
@@ -88,7 +88,7 @@ dokime attribute train.jsonl eval.jsonl \
 
 ## dokime explore
 
-Launch an interactive web UI. Requires `dokime-ai[explore]`.
+Launch an interactive web UI. Requires `dokime[explore]`.
 
 ```bash
 dokime explore data/curated.jsonl --port 8765 -e embeddings.npy

@@ -93,7 +93,7 @@ f = StopwordFilter(min_stopword_ratio=0.05)
 
 ### LanguageFilter
 
-Filter by detected language using lingua (or fastText fallback). Requires `dokime-ai[nlp]`.
+Filter by detected language using lingua (or fastText fallback). Requires `dokime[nlp]`.
 
 ```python
 from dokime.core.filters import LanguageFilter
@@ -138,7 +138,7 @@ f = ExactDedup()
 
 ### MinHashDedup
 
-Fuzzy deduplication via MinHash-LSH. Requires `dokime-ai[dedup]`.
+Fuzzy deduplication via MinHash-LSH. Requires `dokime[dedup]`.
 
 ```python
 from dokime.quality.dedup import MinHashDedup

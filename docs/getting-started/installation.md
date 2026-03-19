@@ -3,7 +3,7 @@
 ## Base install
 
 ```bash
-pip install dokime-ai
+pip install dokime
 ```
 
 This gives you heuristic filters, exact deduplication, the CLI, and JSONL/Parquet/CSV I/O. No heavy dependencies.
@@ -13,18 +13,18 @@ This gives you heuristic filters, exact deduplication, the CLI, and JSONL/Parque
 Install only what you need:
 
 ```bash
-pip install "dokime-ai[embeddings]"   # sentence-transformers, FAISS search, semantic dedup
-pip install "dokime-ai[dedup]"        # MinHash-LSH fuzzy deduplication
-pip install "dokime-ai[nlp]"          # language detection (lingua)
-pip install "dokime-ai[io]"           # HuggingFace datasets, Pandas
-pip install "dokime-ai[attribution]"  # TRAK-based data attribution (torch, transformers)
-pip install "dokime-ai[explore]"      # web UI (FastAPI)
+pip install "dokime[embeddings]"   # sentence-transformers, FAISS search, semantic dedup
+pip install "dokime[dedup]"        # MinHash-LSH fuzzy deduplication
+pip install "dokime[nlp]"          # language detection (lingua)
+pip install "dokime[io]"           # HuggingFace datasets, Pandas
+pip install "dokime[attribution]"  # TRAK-based data attribution (torch, transformers)
+pip install "dokime[explore]"      # web UI (FastAPI)
 ```
 
 Or everything at once:
 
 ```bash
-pip install "dokime-ai[all]"
+pip install "dokime[all]"
 ```
 
 ## Development

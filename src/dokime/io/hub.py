@@ -27,12 +27,12 @@ def load_from_hub(
     Yields:
         Document dicts from the dataset.
 
-    Requires: pip install dokime-ai[io]
+    Requires: pip install dokime[io]
     """
     try:
         from datasets import load_dataset
     except ImportError:
-        raise ImportError("Install HuggingFace support: pip install dokime-ai[io]") from None
+        raise ImportError("Install HuggingFace support: pip install dokime[io]") from None
 
     console.print(f"[bold blue]Dokime[/] — Loading [bold]{dataset_id}[/] (split={split}, streaming={streaming})")
 
@@ -61,12 +61,12 @@ def push_to_hub(
     Returns:
         URL of the uploaded dataset.
 
-    Requires: pip install dokime-ai[io]
+    Requires: pip install dokime[io]
     """
     try:
         from datasets import Dataset
     except ImportError:
-        raise ImportError("Install HuggingFace support: pip install dokime-ai[io]") from None
+        raise ImportError("Install HuggingFace support: pip install dokime[io]") from None
 
     console.print(f"[bold blue]Dokime[/] — Pushing to [bold]{repo_id}[/]")
 

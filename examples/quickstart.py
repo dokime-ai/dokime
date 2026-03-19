@@ -11,7 +11,7 @@ A runnable example showing the full Dokime workflow:
   6. Find outliers
 
 Run:
-    pip install "dokime-ai[all]"
+    pip install "dokime[all]"
     python examples/quickstart.py
 
 This script creates a small synthetic dataset so it works out of the box.

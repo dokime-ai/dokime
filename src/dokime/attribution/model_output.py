@@ -16,7 +16,7 @@ from torch import Tensor
 try:
     from trak.modelout_functions import AbstractModelOutput
 except ImportError:
-    raise ImportError("Install attribution support: pip install dokime-ai[attribution]") from None
+    raise ImportError("Install attribution support: pip install dokime[attribution]") from None
 
 
 class LanguageModelingModelOutput(AbstractModelOutput):

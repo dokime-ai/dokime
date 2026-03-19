@@ -30,7 +30,7 @@ class ExactDedup(Filter):
 class MinHashDedup(Filter):
     """Remove near-duplicates using MinHash-LSH.
 
-    Requires: pip install dokime-ai[dedup]
+    Requires: pip install dokime[dedup]
     """
 
     def __init__(
@@ -42,7 +42,7 @@ class MinHashDedup(Filter):
         try:
             from datasketch import MinHashLSH
         except ImportError:
-            raise ImportError("Install dedup support: pip install dokime-ai[dedup]") from None
+            raise ImportError("Install dedup support: pip install dokime[dedup]") from None
 
         self.threshold = threshold
         self.num_perm = num_perm

@@ -222,7 +222,7 @@ def run_search(raw_jsonl: str, query: str, top_k: int) -> str:
 DESCRIPTION = """\
 # Dokime
 
-**The open-source workbench for ML training data.**
+**pytest for your training data.**
 
 Filter junk, deduplicate, score quality, compute embeddings, and search your \
 dataset -- all from one `pip install`.
@@ -396,19 +396,19 @@ detection -- all from a single `pip install`.
 | | |
 |---|---|
 | GitHub | [github.com/dokime-ai/dokime](https://github.com/dokime-ai/dokime) |
-| PyPI | [pypi.org/project/dokime-ai](https://pypi.org/project/dokime-ai/) |
+| PyPI | [pypi.org/project/dokime](https://pypi.org/project/dokime/) |
 | Docs | [dokime-ai.github.io/dokime](https://dokime-ai.github.io/dokime) |
 
 ### Install
 
 ```bash
-pip install dokime-ai
+pip install dokime
 ```
 
 For the full toolkit (embeddings, fuzzy dedup, language detection):
 
 ```bash
-pip install "dokime-ai[all]"
+pip install "dokime[all]"
 ```
 
 ### License

@@ -30,7 +30,7 @@ def find_semantic_duplicates(
     try:
         import faiss
     except ImportError:
-        raise ImportError("Install embedding support: pip install dokime-ai[embeddings]") from None
+        raise ImportError("Install embedding support: pip install dokime[embeddings]") from None
 
     n = len(embeddings)
     emb = embeddings.astype(np.float32)

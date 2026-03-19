@@ -32,7 +32,7 @@ class EmbeddingIndex:
         try:
             import faiss
         except ImportError:
-            raise ImportError("Install embedding support: pip install dokime-ai[embeddings]") from None
+            raise ImportError("Install embedding support: pip install dokime[embeddings]") from None
 
         self.documents = documents
         self.embeddings = embeddings.astype(np.float32)
@@ -97,7 +97,7 @@ class AnomalyScorer:
         try:
             import faiss
         except ImportError:
-            raise ImportError("Install embedding support: pip install dokime-ai[embeddings]") from None
+            raise ImportError("Install embedding support: pip install dokime[embeddings]") from None
 
         self.embeddings = embeddings.astype(np.float32)
         self.dimension = embeddings.shape[1]

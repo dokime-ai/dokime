@@ -63,6 +63,7 @@ dedup = [
 explore = [
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",
+    "scikit-learn>=1.3",
 ]
 attribution = [
     "traker>=0.3",
@@ -100,6 +101,9 @@ dokime = "dokime.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+dokime = ["explore/static/**"]
 
 [tool.setuptools_scm]
 write_to = "src/dokime/_version.py"

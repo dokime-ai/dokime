@@ -1,5 +1,5 @@
 site_name: Dokime
-site_description: Open-source data curation toolkit for ML training datasets
+site_description: "pytest for your training data. Score, filter, deduplicate, and explore ML training datasets."
 site_url: https://dokime-ai.github.io/dokime
 site_dir: mkdocs_site
 repo_url: https://github.com/dokime-ai/dokime
