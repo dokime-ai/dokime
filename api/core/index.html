@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open-source data curation toolkit for ML training datasets">
+        <meta name="description" content="pytest for your training data. Score, filter, deduplicate, and explore ML training datasets.">
       
       
       
@@ -1787,7 +1787,7 @@
         <p>Filter documents by detected language.</p>
 <p>Uses lingua-language-detector (pure Python, no compilation needed).
 Falls back to fastText if installed and lingua is not available.</p>
-<p>Requires: pip install dokime-ai[nlp]</p>
+<p>Requires: pip install dokime[nlp]</p>
 <p>Language codes: ISO 639-1 lowercase (e.g., "en", "de", "fr", "zh", "ja").</p>
 
 
@@ -2445,7 +2445,8 @@ filters:
     <div class="doc doc-contents ">
 
         <p>Stream documents through the filter chain, yielding kept documents.</p>
-<p>This is the core streaming API — never buffers the full dataset.</p>
+<p>This is the core streaming API — never buffers the full dataset.
+Documents that raise exceptions during filtering are skipped with a warning.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>

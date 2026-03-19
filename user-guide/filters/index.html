@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open-source data curation toolkit for ML training datasets">
+        <meta name="description" content="pytest for your training data. Score, filter, deduplicate, and explore ML training datasets.">
       
       
       
@@ -1404,7 +1404,7 @@
 </code></pre></div>
 <h2 id="language-detection">Language Detection</h2>
 <h3 id="languagefilter">LanguageFilter</h3>
-<p>Filter by detected language using lingua (or fastText fallback). Requires <code>dokime-ai[nlp]</code>.</p>
+<p>Filter by detected language using lingua (or fastText fallback). Requires <code>dokime[nlp]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.core.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanguageFilter</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">f</span> <span class="o">=</span> <span class="n">LanguageFilter</span><span class="p">(</span><span class="n">languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">],</span> <span class="n">min_confidence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </code></pre></div>
@@ -1431,7 +1431,7 @@
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">f</span> <span class="o">=</span> <span class="n">ExactDedup</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="minhashdedup">MinHashDedup</h3>
-<p>Fuzzy deduplication via MinHash-LSH. Requires <code>dokime-ai[dedup]</code>.</p>
+<p>Fuzzy deduplication via MinHash-LSH. Requires <code>dokime[dedup]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.quality.dedup</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinHashDedup</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">f</span> <span class="o">=</span> <span class="n">MinHashDedup</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">num_perm</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 </code></pre></div>

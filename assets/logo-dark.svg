@@ -12,6 +12,6 @@
     <!-- Center grain -->
     <ellipse cx="12.5" cy="4" rx="3.5" ry="8" />
   </g>
-  <!-- Text: Winnow -->
-  <text x="52" y="55" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="42" font-weight="600" fill="#F5F3FF" letter-spacing="-0.5">Winnow</text>
+  <!-- Text: Dokime -->
+  <text x="52" y="55" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="42" font-weight="600" fill="#F5F3FF" letter-spacing="-0.5">Dokime</text>
 </svg>

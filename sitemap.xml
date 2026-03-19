@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://dokime-ai.github.io/dokime/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/api/attribution/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/api/core/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/api/embeddings/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/getting-started/installation/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/getting-started/quickstart/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/user-guide/attribution/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/user-guide/cli/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/user-guide/embeddings/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/user-guide/filters/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
     <url>
          <loc>https://dokime-ai.github.io/dokime/user-guide/pipelines/</loc>
-         <lastmod>2026-03-18</lastmod>
+         <lastmod>2026-03-19</lastmod>
     </url>
 </urlset>

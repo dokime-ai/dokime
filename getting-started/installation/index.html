@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open-source data curation toolkit for ML training datasets">
+        <meta name="description" content="pytest for your training data. Score, filter, deduplicate, and explore ML training datasets.">
       
       
       
@@ -930,20 +930,20 @@
 
 <h1 id="installation">Installation</h1>
 <h2 id="base-install">Base install</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>dokime-ai
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>dokime
 </code></pre></div>
 <p>This gives you heuristic filters, exact deduplication, the CLI, and JSONL/Parquet/CSV I/O. No heavy dependencies.</p>
 <h2 id="extras">Extras</h2>
 <p>Install only what you need:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[embeddings]&quot;</span><span class="w">   </span><span class="c1"># sentence-transformers, FAISS search, semantic dedup</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[dedup]&quot;</span><span class="w">        </span><span class="c1"># MinHash-LSH fuzzy deduplication</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[nlp]&quot;</span><span class="w">          </span><span class="c1"># language detection (lingua)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[io]&quot;</span><span class="w">           </span><span class="c1"># HuggingFace datasets, Pandas</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[attribution]&quot;</span><span class="w">  </span><span class="c1"># TRAK-based data attribution (torch, transformers)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[explore]&quot;</span><span class="w">      </span><span class="c1"># web UI (FastAPI)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[embeddings]&quot;</span><span class="w">   </span><span class="c1"># sentence-transformers, FAISS search, semantic dedup</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[dedup]&quot;</span><span class="w">        </span><span class="c1"># MinHash-LSH fuzzy deduplication</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[nlp]&quot;</span><span class="w">          </span><span class="c1"># language detection (lingua)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[io]&quot;</span><span class="w">           </span><span class="c1"># HuggingFace datasets, Pandas</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[attribution]&quot;</span><span class="w">  </span><span class="c1"># TRAK-based data attribution (torch, transformers)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[explore]&quot;</span><span class="w">      </span><span class="c1"># web UI (FastAPI)</span>
 </code></pre></div>
 <p>Or everything at once:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime-ai[all]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;dokime[all]&quot;</span>
 </code></pre></div>
 <h2 id="development">Development</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dokime-ai/dokime.git

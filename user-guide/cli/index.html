@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open-source data curation toolkit for ML training datasets">
+        <meta name="description" content="pytest for your training data. Score, filter, deduplicate, and explore ML training datasets.">
       
       
       
@@ -1081,31 +1081,31 @@
 </code></pre></div>
 <p>Outputs document count, total characters, average/min/max length.</p>
 <h2 id="dokime-embed">dokime embed</h2>
-<p>Compute embeddings and save as <code>.npy</code>. Requires <code>dokime-ai[embeddings]</code>.</p>
+<p>Compute embeddings and save as <code>.npy</code>. Requires <code>dokime[embeddings]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dokime<span class="w"> </span>embed<span class="w"> </span>data/curated.jsonl<span class="w"> </span>embeddings.npy<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--model<span class="w"> </span>all-MiniLM-L6-v2<span class="w"> </span>--batch-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--device<span class="w"> </span>cuda
 </code></pre></div>
 <h2 id="dokime-search">dokime search</h2>
-<p>Semantic search over a dataset. Requires <code>dokime-ai[embeddings]</code>.</p>
+<p>Semantic search over a dataset. Requires <code>dokime[embeddings]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dokime<span class="w"> </span>search<span class="w"> </span>data/curated.jsonl<span class="w"> </span><span class="s2">&quot;your query here&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># With precomputed embeddings (faster)</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>dokime<span class="w"> </span>search<span class="w"> </span>data/curated.jsonl<span class="w"> </span><span class="s2">&quot;your query&quot;</span><span class="w"> </span>-e<span class="w"> </span>embeddings.npy
 </code></pre></div>
 <h2 id="dokime-outliers">dokime outliers</h2>
-<p>Find anomalous documents via k-NN distance. Requires <code>dokime-ai[embeddings]</code>.</p>
+<p>Find anomalous documents via k-NN distance. Requires <code>dokime[embeddings]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dokime<span class="w"> </span>outliers<span class="w"> </span>data/curated.jsonl<span class="w"> </span>--top<span class="w"> </span><span class="m">20</span><span class="w"> </span>-k<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># With precomputed embeddings</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>dokime<span class="w"> </span>outliers<span class="w"> </span>data/curated.jsonl<span class="w"> </span>-e<span class="w"> </span>embeddings.npy<span class="w"> </span>--top<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h2 id="dokime-attribute">dokime attribute</h2>
-<p>Score training data influence on model performance. Requires <code>dokime-ai[attribution]</code>.</p>
+<p>Score training data influence on model performance. Requires <code>dokime[attribution]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dokime<span class="w"> </span>attribute<span class="w"> </span>train.jsonl<span class="w"> </span>eval.jsonl<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--model<span class="w"> </span>gpt2<span class="w"> </span>--top<span class="w"> </span><span class="m">20</span><span class="w"> </span>--save-dir<span class="w"> </span>./results
 </code></pre></div>
 <h2 id="dokime-explore">dokime explore</h2>
-<p>Launch an interactive web UI. Requires <code>dokime-ai[explore]</code>.</p>
+<p>Launch an interactive web UI. Requires <code>dokime[explore]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>dokime<span class="w"> </span>explore<span class="w"> </span>data/curated.jsonl<span class="w"> </span>--port<span class="w"> </span><span class="m">8765</span><span class="w"> </span>-e<span class="w"> </span>embeddings.npy
 </code></pre></div>
 

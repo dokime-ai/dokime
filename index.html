@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open-source data curation toolkit for ML training datasets">
+        <meta name="description" content="pytest for your training data. Score, filter, deduplicate, and explore ML training datasets.">
       
       
       
@@ -322,10 +322,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-can-it-do" class="md-nav__link">
+  <a href="#score-your-data-in-10-seconds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What can it do?
+        Score your data in 10 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-a-curation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build a curation pipeline
       
     </span>
   </a>
@@ -841,10 +852,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-can-it-do" class="md-nav__link">
+  <a href="#score-your-data-in-10-seconds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What can it do?
+        Score your data in 10 seconds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-a-curation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build a curation pipeline
       
     </span>
   </a>
@@ -883,34 +905,38 @@
 
 
 <h1 id="dokime">Dokime</h1>
-<p><strong>The open-source workbench for ML training data.</strong></p>
-<p>Dokime lets you filter, deduplicate, embed, search, and score your training data -- from one <code>pip install</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>dokime-ai
+<p><strong>pytest for your training data.</strong></p>
+<p>One command to grade your ML training data. Filter junk, deduplicate, score quality, find outliers, and search -- from a single <code>pip install</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>dokime
 </code></pre></div>
-<h2 id="what-can-it-do">What can it do?</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.core.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.core.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">LengthFilter</span><span class="p">,</span> <span class="n">WhitespaceFilter</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.quality.dedup</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactDedup</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="s2">&quot;my-curation&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">LengthFilter</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">50</span><span class="p">))</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">WhitespaceFilter</span><span class="p">(</span><span class="n">max_whitespace_ratio</span><span class="o">=</span><span class="mf">0.4</span><span class="p">))</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">ExactDedup</span><span class="p">())</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;data/raw.jsonl&quot;</span><span class="p">,</span> <span class="s2">&quot;data/clean.parquet&quot;</span><span class="p">)</span>
+<h2 id="score-your-data-in-10-seconds">Score your data in 10 seconds</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dokime<span class="w"> </span>score<span class="w"> </span>data.jsonl
+</code></pre></div>
+<h2 id="build-a-curation-pipeline">Build a curation pipeline</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.core.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.core.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">LengthFilter</span><span class="p">,</span> <span class="n">WhitespaceFilter</span><span class="p">,</span> <span class="n">RepetitionFilter</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dokime.quality.dedup</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactDedup</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="s2">&quot;my-curation&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">LengthFilter</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100_000</span><span class="p">))</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">WhitespaceFilter</span><span class="p">(</span><span class="n">max_whitespace_ratio</span><span class="o">=</span><span class="mf">0.4</span><span class="p">))</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">RepetitionFilter</span><span class="p">(</span><span class="n">max_repetition_ratio</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">ExactDedup</span><span class="p">())</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;data/raw.jsonl&quot;</span><span class="p">,</span> <span class="s2">&quot;data/curated.parquet&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Or from the CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dokime<span class="w"> </span>curate<span class="w"> </span>data/raw.jsonl<span class="w"> </span>data/clean.parquet<span class="w"> </span>--min-length<span class="w"> </span><span class="m">50</span><span class="w"> </span>--dedup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dokime<span class="w"> </span>curate<span class="w"> </span>data/raw.jsonl<span class="w"> </span>data/clean.parquet<span class="w"> </span>--min-length<span class="w"> </span><span class="m">50</span><span class="w"> </span>--dedup
 </code></pre></div>
 <h2 id="next-steps">Next steps</h2>
 <ul>
 <li><a href="getting-started/installation/">Installation</a> -- all extras explained</li>
 <li><a href="getting-started/quickstart/">Quick Start</a> -- end-to-end tutorial</li>
-<li><a href="user-guide/filters/">Filters</a> -- all 12+ built-in filters</li>
+<li><a href="user-guide/filters/">Filters</a> -- all 12 built-in filters</li>
 <li><a href="user-guide/pipelines/">Pipelines</a> -- Python API and YAML config</li>
 <li><a href="user-guide/embeddings/">Embeddings</a> -- search, outliers, semantic dedup</li>
 <li><a href="user-guide/attribution/">Attribution</a> -- find which training examples help or hurt</li>
-<li><a href="user-guide/cli/">CLI Reference</a> -- all 8 commands</li>
+<li><a href="user-guide/cli/">CLI Reference</a> -- all 10 commands</li>
 </ul>
 
 
