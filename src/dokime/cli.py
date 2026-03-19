@@ -240,6 +240,46 @@ def score(
 
 
 @app.command()
+def diagnose(
+    input_path: str = typer.Argument(..., help="Path to dataset to diagnose"),
+    text_field: str = typer.Option("text", "--field", help="Field containing text"),
+    embeddings_path: str | None = typer.Option(None, "--embeddings", "-e", help="Path to precomputed .npy embeddings"),
+    model: str = typer.Option("all-MiniLM-L6-v2", "--model", "-m", help="Sentence-transformer model for embeddings"),
+    batch_size: int = typer.Option(64, "--batch-size", help="Batch size for embedding computation"),
+    device: str | None = typer.Option(None, "--device", help="Device (cpu, cuda, etc.)"),
+    skip_embeddings: bool = typer.Option(False, "--skip-embeddings", help="Skip embedding-based analyses"),
+    minhash_threshold: float = typer.Option(0.8, "--minhash-threshold", help="MinHash similarity threshold"),
+    semantic_threshold: float = typer.Option(0.95, "--semantic-threshold", help="Semantic dedup threshold"),
+    worst: int = typer.Option(5, "--worst", "-w", help="Number of worst documents to show"),
+    outlier_count: int = typer.Option(5, "--outliers", "-o", help="Number of outliers to show"),
+    json_output: bool = typer.Option(False, "--json", help="Output results as JSON"),
+) -> None:
+    """Full health check: quality + duplicates + outliers in one command."""
+    from dokime.quality.diagnose import run_diagnose
+
+    result = run_diagnose(
+        input_path=input_path,
+        text_field=text_field,
+        embeddings_path=embeddings_path,
+        model=model,
+        batch_size=batch_size,
+        device=device,
+        minhash_threshold=minhash_threshold,
+        semantic_threshold=semantic_threshold,
+        skip_embeddings=skip_embeddings,
+        show_worst=worst,
+        show_outliers=outlier_count,
+        quiet=json_output,
+    )
+
+    if json_output:
+        import json as json_mod
+        from dataclasses import asdict
+
+        typer.echo(json_mod.dumps(asdict(result), indent=2, default=str))
+
+
+@app.command()
 def push(
     input_path: str = typer.Argument(..., help="Path to dataset to push"),
     repo_id: str = typer.Argument(..., help="HuggingFace repo ID (e.g., username/my-dataset)"),

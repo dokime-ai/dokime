@@ -15,6 +15,7 @@ from unittest.mock import MagicMock, patch
 
 import pyarrow as pa
 import pyarrow.parquet as pq
+import pytest
 
 from dokime.core.filters import Filter
 from dokime.core.pipeline import Pipeline
@@ -95,6 +96,10 @@ class TestParquetStreaming:
 
 
 class TestComputeEmbeddingsMissingField:
+    @pytest.mark.skipif(
+        not __import__("importlib").util.find_spec("numpy"),
+        reason="numpy not installed",
+    )
     def test_warns_on_missing_field(self, caplog):
         """compute_embeddings should log a warning when documents lack the text field."""
         from dokime.embeddings.compute import compute_embeddings
