@@ -142,10 +142,18 @@ def run_diagnose(
     }
 
     issue_counts = {
-        "short_docs": sum(1 for d in scored_docs if d["_word_count"] < 10),
+        "short_docs": sum(1 for d in scored_docs if d["_word_count"] < 50),
         "low_quality": sum(1 for s in scores if s < 0.3),
         "low_entropy": sum(1 for d in scored_docs if d.get("_char_entropy", 5) < 2.0),
         "high_special": sum(1 for d in scored_docs if d.get("_special_ratio", 0) > 0.3),
+        # New: Gopher/C4/FineWeb signals
+        "high_repetition": sum(1 for d in scored_docs if d.get("_dup_5gram_frac", 0) > 0.15),
+        "low_punctuation": sum(
+            1 for d in scored_docs if d.get("_line_punct_ratio", 1) < 0.12 and d["_word_count"] >= 50
+        ),
+        "high_dup_lines": sum(1 for d in scored_docs if d.get("_dup_line_frac", 0) > 0.30),
+        "boilerplate": sum(1 for d in scored_docs if d.get("_boilerplate_lines", 0) > 0),
+        "few_sentences": sum(1 for d in scored_docs if d.get("_sentence_count", 99) < 3 and d["_word_count"] >= 50),
     }
 
     indexed_scores = sorted(enumerate(scores), key=lambda x: x[1])
@@ -386,6 +394,43 @@ def _render_report(
         n = issues["high_special"]
         issues_table.add_row(
             "[blue]INFO[/]", "High special chars", f"{n:,} ({n / total * 100:.1f}%)", _bar(n, total, 8)
+        )
+
+    # New Gopher/C4/FineWeb signal issues
+    if issues.get("high_repetition", 0) > 0:
+        n = issues["high_repetition"]
+        pct = n / total * 100
+        issues_table.add_row(
+            "[red]CRITICAL[/]" if pct > 5 else "[yellow]WARNING[/]",
+            "High repetition (Gopher)",
+            f"{n:,} ({pct:.1f}%)",
+            _bar(n, total, 8),
+        )
+
+    if issues.get("low_punctuation", 0) > 0:
+        n = issues["low_punctuation"]
+        pct = n / total * 100
+        issues_table.add_row(
+            "[yellow]WARNING[/]", "Low punctuation (FineWeb)", f"{n:,} ({pct:.1f}%)", _bar(n, total, 8)
+        )
+
+    if issues.get("high_dup_lines", 0) > 0:
+        n = issues["high_dup_lines"]
+        pct = n / total * 100
+        issues_table.add_row(
+            "[yellow]WARNING[/]", "Duplicate lines (Gopher)", f"{n:,} ({pct:.1f}%)", _bar(n, total, 8)
+        )
+
+    if issues.get("boilerplate", 0) > 0:
+        n = issues["boilerplate"]
+        issues_table.add_row(
+            "[blue]INFO[/]", "Boilerplate text (C4)", f"{n:,} ({n / total * 100:.1f}%)", _bar(n, total, 8)
+        )
+
+    if issues.get("few_sentences", 0) > 0:
+        n = issues["few_sentences"]
+        issues_table.add_row(
+            "[blue]INFO[/]", "Few sentences (C4)", f"{n:,} ({n / total * 100:.1f}%)", _bar(n, total, 8)
         )
 
     has_issues = any(v > 0 for v in issues.values()) or result.exact_duplicate_count > 0

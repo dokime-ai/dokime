@@ -100,13 +100,18 @@ def run_report(
     overall_pct = avg_score * 100
 
     # Count issues
-    short_docs = sum(1 for d in documents if d["_word_count"] < 10)
+    short_docs = sum(1 for d in documents if d["_word_count"] < 50)
     low_quality = sum(1 for s in scores if s < 0.3)
     medium_quality = sum(1 for s in scores if 0.3 <= s < 0.6)
     good_quality = sum(1 for s in scores if 0.6 <= s < 0.8)
     excellent_quality = sum(1 for s in scores if s >= 0.8)
     low_entropy = sum(1 for d in documents if d.get("_char_entropy", 5) < 2.0)
     high_special = sum(1 for d in documents if d.get("_special_ratio", 0) > 0.3)
+    # New: Gopher/C4/FineWeb signals
+    high_repetition = sum(1 for d in documents if d.get("_dup_5gram_frac", 0) > 0.15)
+    low_punctuation = sum(1 for d in documents if d.get("_line_punct_ratio", 1) < 0.12 and d["_word_count"] >= 50)
+    high_dup_lines = sum(1 for d in documents if d.get("_dup_line_frac", 0) > 0.30)
+    boilerplate = sum(1 for d in documents if d.get("_boilerplate_lines", 0) > 0)
 
     grade, grade_color = _grade_letter(overall_pct)
 
@@ -126,6 +131,10 @@ def run_report(
         "low_quality": low_quality,
         "low_entropy": low_entropy,
         "high_special_chars": high_special,
+        "high_repetition": high_repetition,
+        "low_punctuation": low_punctuation,
+        "high_dup_lines": high_dup_lines,
+        "boilerplate": boilerplate,
         "distribution": {
             "excellent": excellent_quality,
             "good": good_quality,
@@ -212,7 +221,54 @@ def run_report(
             _bar(high_special, total, 10),
         )
 
-    if duplicate_count == 0 and low_quality == 0 and short_docs == 0:
+    if high_repetition > 0:
+        pct = high_repetition / total * 100
+        issues_table.add_row(
+            "[red]CRITICAL[/]" if pct > 5 else "[yellow]WARNING[/]",
+            "High repetition (Gopher)",
+            f"{high_repetition:,} ({pct:.1f}%)",
+            _bar(high_repetition, total, 10),
+        )
+
+    if low_punctuation > 0:
+        pct = low_punctuation / total * 100
+        issues_table.add_row(
+            "[yellow]WARNING[/]",
+            "Low punctuation (FineWeb)",
+            f"{low_punctuation:,} ({pct:.1f}%)",
+            _bar(low_punctuation, total, 10),
+        )
+
+    if high_dup_lines > 0:
+        pct = high_dup_lines / total * 100
+        issues_table.add_row(
+            "[yellow]WARNING[/]",
+            "Duplicate lines (Gopher)",
+            f"{high_dup_lines:,} ({pct:.1f}%)",
+            _bar(high_dup_lines, total, 10),
+        )
+
+    if boilerplate > 0:
+        pct = boilerplate / total * 100
+        issues_table.add_row(
+            "[blue]INFO[/]",
+            "Boilerplate text (C4)",
+            f"{boilerplate:,} ({pct:.1f}%)",
+            _bar(boilerplate, total, 10),
+        )
+
+    all_issue_counts = [
+        duplicate_count,
+        low_quality,
+        short_docs,
+        low_entropy,
+        high_special,
+        high_repetition,
+        low_punctuation,
+        high_dup_lines,
+        boilerplate,
+    ]
+    if all(c == 0 for c in all_issue_counts):
         issues_table.add_row("[green]NONE[/]", "No issues found", "-", "")
 
     console.print(issues_table)
