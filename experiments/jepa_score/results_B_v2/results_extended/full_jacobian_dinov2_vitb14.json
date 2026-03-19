@@ -1,0 +1,16 @@
+[
+  {
+    "experiment": "full_jacobian",
+    "model": "dinov2_vitb14",
+    "ood_pair": "CIFAR10_vs_SVHN",
+    "method": "JEPA-SCORE-full",
+    "n_samples": 500,
+    "auroc": 0.6725,
+    "fpr95": 0.802,
+    "time_s": 5274.48709321022,
+    "n_projections": null,
+    "seed": null,
+    "embed_dim": 768,
+    "notes": "Full Jacobian matching paper Appendix B. No randomized approximation."
+  }
+]

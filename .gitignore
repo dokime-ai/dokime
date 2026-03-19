@@ -52,3 +52,8 @@ site/node_modules/
 site/dist/
 site/.astro/
 data/
+# Experiment data (large NPZ spectra)
+experiments/jepa_score/results_*/svd_spectra/
+experiments/jepa_score/results_*/results_extended/svd_spectra/
+blog/data/*.jsonl
+blog/data/*.json

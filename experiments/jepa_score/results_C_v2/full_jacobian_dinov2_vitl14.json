@@ -1,0 +1,44 @@
+[
+  {
+    "experiment": "full_jacobian",
+    "model": "dinov2_vitl14",
+    "ood_pair": "CIFAR10_vs_SVHN",
+    "method": "JEPA-SCORE-full",
+    "n_samples": 200,
+    "auroc": 0.47715,
+    "fpr95": 0.89,
+    "time_s": 6485.445215702057,
+    "n_projections": null,
+    "seed": null,
+    "embed_dim": 768,
+    "notes": "Full Jacobian matching paper Appendix B. No randomized approximation."
+  },
+  {
+    "experiment": "full_jacobian",
+    "model": "dinov2_vitl14",
+    "ood_pair": "CIFAR10_vs_CIFAR100",
+    "method": "JEPA-SCORE-full",
+    "n_samples": 200,
+    "auroc": 0.5657249999999999,
+    "fpr95": 0.94,
+    "time_s": 6486.202517747879,
+    "n_projections": null,
+    "seed": null,
+    "embed_dim": 768,
+    "notes": "Full Jacobian matching paper Appendix B. No randomized approximation."
+  },
+  {
+    "experiment": "full_jacobian",
+    "model": "dinov2_vitl14",
+    "ood_pair": "CIFAR10_vs_Textures",
+    "method": "JEPA-SCORE-full",
+    "n_samples": 200,
+    "auroc": 0.8095,
+    "fpr95": 0.805,
+    "time_s": 6486.862368106842,
+    "n_projections": null,
+    "seed": null,
+    "embed_dim": 768,
+    "notes": "Full Jacobian matching paper Appendix B. No randomized approximation."
+  }
+]
