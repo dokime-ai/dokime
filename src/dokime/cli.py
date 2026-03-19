@@ -357,6 +357,60 @@ def attribute(
         console.print(f"  {rank}. [{score:+.6f}] {text}")
 
 
+@app.command("eval-physics")
+def eval_physics(
+    model_url: str = typer.Option(..., "--model-url", help="OpenAI-compatible API endpoint (chat/completions URL)"),
+    api_key: str | None = typer.Option(None, "--api-key", help="API key (Bearer token)"),
+    dataset: str | None = typer.Option(None, "--dataset", help="Path to PhyX_MC.tsv (uses bundled default if omitted)"),
+    limit: int = typer.Option(0, "--limit", help="Limit number of questions (0=all)"),
+    json_output: bool = typer.Option(False, "--json", help="Output results as JSON"),
+) -> None:
+    """Evaluate a vision-language model on physics reasoning (PhyX benchmark).
+
+    Sends each PhyX multiple-choice question (image + text) to the model,
+    scores answers with rule-based string matching, and reports accuracy
+    broken down by physics domain.
+
+    Example:
+        dokime eval-physics --model-url http://localhost:8000/v1/chat/completions --limit 10
+    """
+    from dokime.eval.physics import print_report, run_evaluation
+
+    if not json_output:
+        from rich.console import Console
+
+        console = Console()
+        console.print("[bold blue]Dokime[/] eval-physics starting...")
+
+        from rich.progress import Progress
+
+        with Progress() as progress:
+            task = progress.add_task("Evaluating...", total=None)
+
+            def on_progress(current: int, total: int, qr: object) -> None:
+                progress.update(task, total=total, completed=current)
+
+            result = run_evaluation(
+                model_url=model_url,
+                api_key=api_key,
+                dataset_path=dataset,
+                limit=limit,
+                on_progress=on_progress,
+            )
+
+        print_report(result)
+    else:
+        import json as json_mod
+
+        result = run_evaluation(
+            model_url=model_url,
+            api_key=api_key,
+            dataset_path=dataset,
+            limit=limit,
+        )
+        typer.echo(json_mod.dumps(result.to_dict(), indent=2))
+
+
 @app.command()
 def explore(
     input_path: str = typer.Argument(..., help="Path to dataset to explore"),
