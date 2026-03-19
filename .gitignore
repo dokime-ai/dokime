@@ -43,7 +43,7 @@ htmlcov/
 *.jsonl
 *.csv
 !tests/fixtures/**
-src/winnow/_version.py
+src/dokime/_version.py
 # MkDocs build output
 mkdocs_site/
 
