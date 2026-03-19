@@ -200,6 +200,10 @@ class TestPipelineErrorHandling:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.skipif(
+    not __import__("importlib").util.find_spec("fastapi"),
+    reason="fastapi not installed",
+)
 class TestExploreStaticFiles:
     def test_static_dir_exists(self):
         """The explore/static directory must exist in the package."""
