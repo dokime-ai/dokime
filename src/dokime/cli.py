@@ -359,7 +359,8 @@ def attribute(
 
 @app.command("eval-physics")
 def eval_physics(
-    model_url: str = typer.Option(..., "--model-url", help="OpenAI-compatible API endpoint (chat/completions URL)"),
+    model_url: str = typer.Option(..., "--model-url", help="OpenAI-compatible API endpoint"),
+    model_name: str = typer.Option("default", "--model", help="Model name to send in API request (e.g., minicpm-v, gpt-4o)"),
     api_key: str | None = typer.Option(None, "--api-key", help="API key (Bearer token)"),
     dataset: str | None = typer.Option(None, "--dataset", help="Path to PhyX_MC.tsv (uses bundled default if omitted)"),
     limit: int = typer.Option(0, "--limit", help="Limit number of questions (0=all)"),
@@ -371,8 +372,9 @@ def eval_physics(
     scores answers with rule-based string matching, and reports accuracy
     broken down by physics domain.
 
-    Example:
-        dokime eval-physics --model-url http://localhost:8000/v1/chat/completions --limit 10
+    Examples:
+        dokime eval-physics --model-url http://localhost:11434/v1/chat/completions --model minicpm-v --limit 10
+        dokime eval-physics --model-url https://api.openai.com/v1/chat/completions --model gpt-4o --api-key sk-...
     """
     from dokime.eval.physics import print_report, run_evaluation
 
@@ -393,6 +395,7 @@ def eval_physics(
             result = run_evaluation(
                 model_url=model_url,
                 api_key=api_key,
+                model_name=model_name,
                 dataset_path=dataset,
                 limit=limit,
                 on_progress=on_progress,
@@ -405,6 +408,7 @@ def eval_physics(
         result = run_evaluation(
             model_url=model_url,
             api_key=api_key,
+            model_name=model_name,
             dataset_path=dataset,
             limit=limit,
         )

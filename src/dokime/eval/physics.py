@@ -190,6 +190,7 @@ def query_model(
     api_key: str | None,
     image_b64: str,
     question: str,
+    model_name: str = "default",
     timeout: int = 120,
     max_retries: int = 3,
 ) -> str:
@@ -200,7 +201,7 @@ def query_model(
 
     # Build the message with image + text
     payload = {
-        "model": "default",  # Most OpenAI-compatible servers ignore or auto-select
+        "model": model_name,
         "messages": [
             {
                 "role": "user",
@@ -250,6 +251,7 @@ def query_model(
 def run_evaluation(
     model_url: str,
     api_key: str | None = None,
+    model_name: str = "default",
     dataset_path: str | Path | None = None,
     limit: int = 0,
     on_progress: Any = None,
@@ -282,7 +284,7 @@ def run_evaluation(
         image_b64 = row["image"]
 
         # Query the model
-        prediction = query_model(model_url, api_key, image_b64, question)
+        prediction = query_model(model_url, api_key, image_b64, question, model_name=model_name)
 
         # Score
         extracted, correct = score_mc(gt_answer, prediction)
